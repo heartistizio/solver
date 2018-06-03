@@ -15,7 +15,7 @@ public class Point {
     }
 
     public Double getY() {
-        return X;
+        return y;
     }
 
     public void setX(Double x) {
