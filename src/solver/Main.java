@@ -37,10 +37,16 @@ public class Main {
             firstEquationFactors = Factors.parse(aFactors);
             secondEquationFactors = Factors.parse(bFactors);
             functionFactors = Factors.parse(funFactors);
+            PD object = new PD(firstEquationFactors, secondEquationFactors, functionFactors);
+            object.showCrossPoints();
+            System.out.println(object.minValuePoint());
 
         } catch(NumberFormatException e) {
             System.out.println("Wrong factors inserted.");
         }
+
+
+
 
 
        /* TODO: OUTPUT
