@@ -10,8 +10,6 @@ public class Factors {
         String[] preConversionFactors;
         List<Double> factors = new ArrayList<>();
 
-        double currentFactor;
-
         preConversionFactors = factorsString.split(" ");
 
         for(String i : preConversionFactors) {

@@ -5,6 +5,16 @@ import java.util.Scanner;
 
 public class Main {
 
+   /* TODO: goalFunction
+    public double goalFunction(List<Double> , List<Double> point) {
+
+        double result = 0;
+
+
+
+        return;
+    }*/
+
     public static void main(String[] args) {
 
         Scanner scanner = new Scanner(System.in);
@@ -28,29 +38,24 @@ public class Main {
             secondEquationFactors = Factors.parse(bFactors);
             functionFactors = Factors.parse(funFactors);
 
-
-            for(double i : firstEquationFactors) {
-                System.out.print(i);
-                System.out.print(" ");
-            }
-
-            System.out.println();
-
-            for(double i : secondEquationFactors) {
-                System.out.print(i);
-                System.out.print(" ");
-            }
-
-            System.out.println();
-
-            for(double i : functionFactors) {
-                System.out.print(i);
-                System.out.print(" ");
-            }
-
         } catch(NumberFormatException e) {
             System.out.println("Wrong factors inserted.");
         }
+
+
+       /* TODO: OUTPUT
+
+       System.out.println("Constraints points list: ");
+        for(int i= 0; i< ; i++) {
+            System.out.println("");
+        }
+
+
+        System.out.println("Point V coordinates: ");
+
+
+        System.out.println("");*/
+
     }
 }
 
