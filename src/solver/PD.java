@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PD {
-    
+
     private List<Double> firstEquationFactors;
     private List<Double> secondEquationFactors;
     private List<Double> functionFactors;
@@ -28,29 +28,30 @@ public class PD {
         return functionFactors;
     }
 
-    public List<Point> showCrossPoints(){
-        for(int i = 0; i < functionFactors.size(); i++){
-            for(int n = 0; n < i; i++){
+    public List<Point> showCrossPoints() {
+        for (int i = 0; i < functionFactors.size(); i++) {
+            for (int n = i; n < functionFactors.size(); n++) {
                 Double det = ((firstEquationFactors.get(i) * secondEquationFactors.get(n)) - (secondEquationFactors.get(i) * firstEquationFactors.get(n)));
                 Double x = ((((secondEquationFactors.get(n)) * functionFactors.get(i)) - (secondEquationFactors.get(i) * functionFactors.get(n))) / det);
                 Double y = ((((firstEquationFactors.get(i)) * functionFactors.get(n)) - (firstEquationFactors.get(n) * functionFactors.get(i))) / det);
-                CrossPointList.add(new Point (x, y));
+                CrossPointList.add(new Point(x, y));
             }
         }
 
-        for(int i = 0; i < CrossPointList.size(); i++) {
+        for (int i = 0; i < CrossPointList.size(); i++) {
             System.out.println("Point " + i);
             CrossPointList.get(i).printPoint();
 
         }
         return CrossPointList;
     }
-    public Point V(){
+
+    public Point minValuePoint() {
         Double minValue = Double.MAX_VALUE;
         Point V = new Point(0.0, 0.0);
-        for(Point P : CrossPointList){
+        for (Point P : CrossPointList) {
             Double currentValue = firstEquationFactors.get(firstEquationFactors.size()) * P.getX() + secondEquationFactors.get(secondEquationFactors.size()) * P.getY();
-            if(currentValue < minValue) {
+            if (currentValue < minValue) {
                 minValue = currentValue;
                 V.setX(P.getX());
                 V.setY(P.getY());
