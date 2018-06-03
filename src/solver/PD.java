@@ -38,30 +38,25 @@ public class PD {
             }
         }
 
-        for(int i = 0; i < CrossPointList.size(); i++){
+        for(int i = 0; i < CrossPointList.size(); i++) {
             System.out.println("Point " + i);
             CrossPointList.get(i).printPoint();
 
         }
-
-        public Point V(){
-            Double minValue = Double.MAX_VALUE;
-            Point V = new Point(0.0, 0.0);
-            for(Point P : CrossPointList){
-                Double currentValue = firstEquationFactors.get(firstEquationFactors.size()) * P.getX() + secondEquationFactors.get(secondEquationFactors.size()) * P.getY();
-                if(currentValue < minValue) {
-                    minValue = currentValue;
-                    V.setX(P.getX());
-                    V.setY(P.getY());
-                }
-                return V;
-
-
+        return CrossPointList;
+    }
+    public Point V(){
+        Double minValue = Double.MAX_VALUE;
+        Point V = new Point(0.0, 0.0);
+        for(Point P : CrossPointList){
+            Double currentValue = firstEquationFactors.get(firstEquationFactors.size()) * P.getX() + secondEquationFactors.get(secondEquationFactors.size()) * P.getY();
+            if(currentValue < minValue) {
+                minValue = currentValue;
+                V.setX(P.getX());
+                V.setY(P.getY());
             }
 
         }
-
-
-        return CrossPointList;
+        return V;
     }
 }
