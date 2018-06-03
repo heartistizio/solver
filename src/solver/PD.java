@@ -12,8 +12,8 @@ public class PD {
 
     public PD(List<Double> firstEquationFactors, List<Double> secondEquationFactors, List<Double> functionFactors) {
         this.firstEquationFactors = firstEquationFactors;
-        this.secondEquationFactors = firstEquationFactors;
-        this.functionFactors = firstEquationFactors;
+        this.secondEquationFactors = secondEquationFactors;
+        this.functionFactors = functionFactors;
     }
 
     public List<Double> getFirstEquationFactors() {
@@ -29,8 +29,8 @@ public class PD {
     }
 
     public List<Point> showCrossPoints() {
-        for (int i = 0; i < functionFactors.size(); i++) {
-            for (int n = i; n < functionFactors.size(); n++) {
+        for (int i = 0; i < functionFactors.size() - 1; i++) {
+            for (int n = i + 1; n < functionFactors.size(); n++) {
                 Double det = ((firstEquationFactors.get(i) * secondEquationFactors.get(n)) - (secondEquationFactors.get(i) * firstEquationFactors.get(n)));
                 Double x = ((((secondEquationFactors.get(n)) * functionFactors.get(i)) - (secondEquationFactors.get(i) * functionFactors.get(n))) / det);
                 Double y = ((((firstEquationFactors.get(i)) * functionFactors.get(n)) - (firstEquationFactors.get(n) * functionFactors.get(i))) / det);
@@ -50,7 +50,7 @@ public class PD {
         Double minValue = Double.MAX_VALUE;
         Point V = new Point(0.0, 0.0);
         for (Point P : CrossPointList) {
-            Double currentValue = firstEquationFactors.get(firstEquationFactors.size()) * P.getX() + secondEquationFactors.get(secondEquationFactors.size()) * P.getY();
+            Double currentValue = firstEquationFactors.get(firstEquationFactors.size() - 1) * P.getX() + secondEquationFactors.get(secondEquationFactors.size() - 1) * P.getY();
             if (currentValue < minValue) {
                 minValue = currentValue;
                 V.setX(P.getX());
