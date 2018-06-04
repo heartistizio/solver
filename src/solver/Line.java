@@ -2,12 +2,12 @@ package solver;
 
 public class Line {
 
-    public final double x;
-    public final double y;
+    public final double a;
+    public final double b;
     public final String sign;
-    public Line(double x, double y, String sign) {
-        this.x = x;
-        this.y = y;
+    public Line(double a, double b, String sign) {
+        this.a = a;
+        this.b = b;
         this.sign = sign;
     }
 }
