@@ -1,19 +1,10 @@
 package solver;
 
+import java.util.IllegalFormatException;
 import java.util.List;
 import java.util.Scanner;
 
 public class Main {
-
-   /* TODO: goalFunction
-    public double goalFunction(List<Double> , List<Double> point) {
-
-        double result = 0;
-
-
-
-        return;
-    }*/
 
     public static void main(String[] args) {
 
@@ -23,45 +14,59 @@ public class Main {
         List<Double> secondEquationFactors;
         List<Double> functionFactors;
 
-        // pobierz wspolczynniki
         System.out.println("Input first equation factors: ");
         String aFactors = scanner.nextLine();
+        System.out.println("Input first equation sign (ex. <=, >=): ");
+        String firstEquationSign = scanner.nextLine();
         System.out.println("Input second equation factors: ");
-        String bFactors = scanner.nextLine();
-        System.out.println("Input goal function xD factors: ");
+        String secondEquationSign = scanner.nextLine();
+        System.out.println("Input second equation sign (ex. <=, >=): ");
+        String bSign = scanner.nextLine();
+        System.out.println("Input goal function factors: ");
         String funFactors = scanner.nextLine();
+        System.out.println("Is your function 'min' or 'max'? ");
+        String minMax = scanner.nextLine();
 
         scanner.close();
 
         try {
-            firstEquationFactors = Factors.parse(aFactors);
-            secondEquationFactors = Factors.parse(bFactors);
-            functionFactors = Factors.parse(funFactors);
-            PD object = new PD(firstEquationFactors, secondEquationFactors, functionFactors);
-            object.showCrossPoints();
-            System.out.println("Point V");
-            object.minValuePoint().printPoint();
 
-        } catch(NumberFormatException e) {
+            boolean max;
+
+            if (minMax.equals("max")) {
+                max = true;
+            } else if (minMax.equals("min")) {
+                max = false;
+            } else {
+                throw new NumberFormatException();
+            }
+
+            firstEquationFactors = Factors.parse(aFactors);
+            secondEquationFactors = Factors.parse(secondEquationSign);
+            functionFactors = Factors.parse(funFactors);
+            Solver solver = new Solver(firstEquationFactors, firstEquationSign, secondEquationFactors, secondEquationSign, functionFactors, max);
+            solver.findCrossPoints();
+            List<Point> crossPoints = solver.getCrossPoints();
+
+            // output crosspoints:
+            System.out.println("Constraints points list: ");
+            for (Point i : crossPoints) {
+                System.out.println(i.getX() + " " + i.getY());
+            }
+            // output V point:
+            System.out.println("Point V: ");
+
+            if (solver.isMax()) {
+                solver.minValuePoint().printPoint();
+            } else {
+                solver.maxValuePoint().printPoint();
+            }
+
+
+        } catch (NumberFormatException e) {
             System.out.println("Wrong factors inserted.");
         }
 
-
-
-
-
-       /* TODO: OUTPUT
-
-       System.out.println("Constraints points list: ");
-        for(int i= 0; i< ; i++) {
-            System.out.println("");
-        }
-
-
-        System.out.println("Point V coordinates: ");
-
-
-        System.out.println("");*/
 
     }
 }
