@@ -12,7 +12,10 @@ public class Solver {
     private List<Double> secondEquationFactors;
 
     private int programSize;
-    private double GoalFunction;
+    private int JanuszSize;
+    private double GoalFunctionValue;
+    private double finalX;
+    private double finalY;
 
     private Point V = new Point(0.0, 0.0);
 
@@ -20,6 +23,7 @@ public class Solver {
     private String secondEquationSign;
 
     private List<Double> functionFactors;
+    private List<Integer> Janusz1;
     private List<Point> crossPoints = new ArrayList<>();
 
     public List<Line> getDualProgramFactors() {
@@ -38,6 +42,9 @@ public class Solver {
         this.functionFactors = functionFactors;
         this.max = max;
         this.programSize = firstEquationFactors.size();
+        this.JanuszSize = functionFactors.size();
+
+
 
         dualProgramFactors.add(new Line(0,1, 0, ">="));
         dualProgramFactors.add(new Line(1,0, 0, ">="));
@@ -131,7 +138,7 @@ public class Solver {
 
     public Point minValuePoint() {
         Double minValue = Double.MAX_VALUE;
-        Point V = new Point(0.0, 0.0);
+        V = new Point(0.0, 0.0);
         for (Point P : crossPoints) {
             Double currentValue = firstEquationFactors.get(firstEquationFactors.size() - 1) * P.getX() + secondEquationFactors.get(secondEquationFactors.size() - 1) * P.getY();
             if (currentValue < minValue) {
@@ -157,21 +164,8 @@ public class Solver {
         return V;
     }
 
-    public Double findGoalFunction() {
-        List<Double> finalFirstEquationFactors = new ArrayList<>();
-        List<Double> finalSecondEquationFactors = new ArrayList<>();
-        List<Double> finalFunctionFactors = new ArrayList<>();
-        for(Integer i = 0; i < functionFactors.size(); i++){
-            System.out.println(functionFactors.get(i));
-            System.out.println((V.getX() * firstEquationFactors.get(i) + V.getY() * secondEquationFactors.get(i) ));
-            if(((V.getX() * firstEquationFactors.get(i) + V.getY() * secondEquationFactors.get(i) )== functionFactors.get(i)))
-                finalFirstEquationFactors.add(firstEquationFactors.get(i));
-            finalSecondEquationFactors.add(secondEquationFactors.get(i));
-            finalFunctionFactors.add(functionFactors.get(i));
-        }
-        System.out.println(finalFirstEquationFactors);
-        System.out.println(finalSecondEquationFactors);
-        System.out.println(finalFunctionFactors);
-        return GoalFunction;
+    public Double findGoalFunctionValue() {
+        GoalFunctionValue = V.getX() * firstEquationFactors.get(firstEquationFactors.size()-1) + V.getY() * secondEquationFactors.get(secondEquationFactors.size()-1);
+        return GoalFunctionValue;
     }
 }

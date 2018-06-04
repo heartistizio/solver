@@ -76,6 +76,11 @@ public class Main {
                 solver.maxValuePoint().printPoint();
             }
 
+            // output goal function
+
+            System.out.println("Goal Function Value: ");
+            System.out.println(solver.findGoalFunctionValue());
+
         } catch (NumberFormatException e) {
             System.out.println("Wrong factors inserted.");
         }
