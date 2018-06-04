@@ -1,6 +1,5 @@
 package solver;
 
-import java.util.IllegalFormatException;
 import java.util.List;
 import java.util.Scanner;
 
@@ -19,9 +18,9 @@ public class Main {
         System.out.println("Input first equation sign (ex. <=, >=): ");
         String firstEquationSign = scanner.nextLine();
         System.out.println("Input second equation factors: ");
-        String secondEquationSign = scanner.nextLine();
+        String bFactors = scanner.nextLine();
         System.out.println("Input second equation sign (ex. <=, >=): ");
-        String bSign = scanner.nextLine();
+        String secondEquationSign = scanner.nextLine();
         System.out.println("Input goal function factors: ");
         String funFactors = scanner.nextLine();
         System.out.println("Is your function 'min' or 'max'? ");
@@ -42,7 +41,7 @@ public class Main {
             }
 
             firstEquationFactors = Factors.parse(aFactors);
-            secondEquationFactors = Factors.parse(secondEquationSign);
+            secondEquationFactors = Factors.parse(bFactors);
             functionFactors = Factors.parse(funFactors);
             Solver solver = new Solver(firstEquationFactors, firstEquationSign, secondEquationFactors, secondEquationSign, functionFactors, max);
             solver.findCrossPoints();
