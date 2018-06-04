@@ -1,12 +1,14 @@
 package solver;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 public class Solver {
 
     private List<Double> firstEquationFactors;
+
+    public Solver() {} // for testing purposes
+
     private List<Double> secondEquationFactors;
 
     private int programSize;
@@ -32,9 +34,9 @@ public class Solver {
 
         for (int i = 0; i < this.programSize; i++) { // converting to dual program
             String sign = ">=";
-            if(firstEquationSign == "<=") {
+            if (firstEquationSign == "<=") {
                 sign = ">=";
-            } else if(firstEquationSign == ">=") {
+            } else if (firstEquationSign == ">=") {
                 sign = "<=";
             }
             dualProgramFactors.add(new Line(firstEquationFactors.get(i), secondEquationFactors.get(i), sign));
@@ -49,21 +51,30 @@ public class Solver {
         return max;
     }
 
+    public Point findCrossPoint(Line lineA, Line lineB) {
+        if (lineA.a == lineB.a) { // pararell functions
+            return null;
+        }
+        double x = -(lineA.b - lineB.b) / (lineA.a - lineB.a);
+        double y = lineA.a * x + lineA.b;
+
+        return new Point(x, y);
+    }
 
     public void findCrossPoints() {
         for (int i = 0; i < functionFactors.size() - 1; i++) {
+            Line lineA = dualProgramFactors.get(i);
             for (int n = i + 1; n < functionFactors.size(); n++) {
-                Double det = ((firstEquationFactors.get(i) * secondEquationFactors.get(n)) - (secondEquationFactors.get(i) * firstEquationFactors.get(n)));
-                Double x = ((((secondEquationFactors.get(n)) * functionFactors.get(i)) - (secondEquationFactors.get(i) * functionFactors.get(n))) / det);
-                Double y = ((((firstEquationFactors.get(i)) * functionFactors.get(n)) - (firstEquationFactors.get(n) * functionFactors.get(i))) / det);
-                this.crossPoints.add(new Point(x, y));
+                Line lineB = dualProgramFactors.get(n);
+                Point point = findCrossPoint(lineA, lineB);
+                this.crossPoints.add(point);
             }
         }
     }
 
     public void discardCrossPoints() { // discarding crossing points that don't belong to the area
         for (Line line : dualProgramFactors) {
-            crossPoints.removeIf(point -> !isPointInRange(line.x, line.y, line.sign, point));
+            crossPoints.removeIf(point -> !isPointInRange(line.a, line.b, line.sign, point));
         }
     }
 
