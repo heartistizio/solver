@@ -2,6 +2,7 @@ package solver;
 
 import java.util.List;
 import java.util.Scanner;
+import java.util.Set;
 
 public class Main {
 
@@ -46,7 +47,6 @@ public class Main {
             Solver solver = new Solver(firstEquationFactors, firstEquationSign, secondEquationFactors, secondEquationSign, functionFactors, max);
             solver.findCrossPoints();
             List<Point> crossPoints = solver.getCrossPoints();
-
 
             // output duallines:
             for(Line line : solver.getDualProgramFactors()) {

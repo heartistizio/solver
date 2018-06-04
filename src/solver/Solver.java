@@ -39,6 +39,9 @@ public class Solver {
         this.max = max;
         this.programSize = firstEquationFactors.size();
 
+        dualProgramFactors.add(new Line(0,1, 0, ">="));
+        dualProgramFactors.add(new Line(1,0, 0, ">="));
+
         for (int i = 0; i < this.programSize - 1; i++) { // converting to dual program
             String sign = ">=";
             if (firstEquationSign == "<=") {
@@ -146,7 +149,7 @@ public class Solver {
     }
 
 
-    public Double findGoalFunctionxD() {
+    public Double findGoalFunction() {
         List<Double> finalFirstEquationFactors = new ArrayList<>();
         List<Double> finalSecondEquationFactors = new ArrayList<>();
         List<Double> finalFunctionFactors = new ArrayList<>();
@@ -163,16 +166,4 @@ public class Solver {
         System.out.println(finalFunctionFactors);
         return GoalFunction;
     }
-    /* TODO: public double bestValue() {
-
-
-
-        double bestValue = 0;
-
-        for(double i :  this.functionFactors) {
-            bestValue = bestValue + ;
-        }
-
-        return bestValue;
-    }*/
 }
