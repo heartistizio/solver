@@ -12,10 +12,7 @@ public class Solver {
     private List<Double> secondEquationFactors;
 
     private int programSize;
-    private int JanuszSize;
     private double GoalFunctionValue;
-    private double finalX;
-    private double finalY;
 
     private Point V = new Point(0.0, 0.0);
 
@@ -23,7 +20,6 @@ public class Solver {
     private String secondEquationSign;
 
     private List<Double> functionFactors;
-    private List<Integer> Janusz1;
     private List<Point> crossPoints = new ArrayList<>();
 
     public List<Line> getDualProgramFactors() {
@@ -42,7 +38,6 @@ public class Solver {
         this.functionFactors = functionFactors;
         this.max = max;
         this.programSize = firstEquationFactors.size();
-        this.JanuszSize = functionFactors.size();
 
 
 
@@ -138,7 +133,6 @@ public class Solver {
 
     public Point minValuePoint() {
         Double minValue = Double.MAX_VALUE;
-        V = new Point(0.0, 0.0);
         for (Point P : crossPoints) {
             Double currentValue = firstEquationFactors.get(firstEquationFactors.size() - 1) * P.getX() + secondEquationFactors.get(secondEquationFactors.size() - 1) * P.getY();
             if (currentValue < minValue) {
