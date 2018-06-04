@@ -19,6 +19,10 @@ public class Solver {
     private List<Double> functionFactors;
     private List<Point> crossPoints = new ArrayList<>();
 
+    public List<Line> getDualProgramFactors() {
+        return dualProgramFactors;
+    }
+
     private List<Line> dualProgramFactors = new ArrayList<>();
 
     private boolean max;
@@ -32,14 +36,14 @@ public class Solver {
         this.max = max;
         this.programSize = firstEquationFactors.size();
 
-        for (int i = 0; i < this.programSize; i++) { // converting to dual program
+        for (int i = 0; i < this.programSize - 1; i++) { // converting to dual program
             String sign = ">=";
             if (firstEquationSign == "<=") {
                 sign = ">=";
             } else if (firstEquationSign == ">=") {
                 sign = "<=";
             }
-            dualProgramFactors.add(new Line(firstEquationFactors.get(i), secondEquationFactors.get(i), sign));
+            dualProgramFactors.add(new Line(firstEquationFactors.get(i), secondEquationFactors.get(i), functionFactors.get(i), sign));
         }
     }
 
@@ -62,9 +66,9 @@ public class Solver {
     }
 
     public void findCrossPoints() {
-        for (int i = 0; i < functionFactors.size() - 1; i++) {
+        for (int i = 0; i < dualProgramFactors.size() - 1; i++) {
             Line lineA = dualProgramFactors.get(i);
-            for (int n = i + 1; n < functionFactors.size(); n++) {
+            for (int n = i + 1; n < dualProgramFactors.size(); n++) {
                 Line lineB = dualProgramFactors.get(n);
                 Point point = findCrossPoint(lineA, lineB);
                 this.crossPoints.add(point);
