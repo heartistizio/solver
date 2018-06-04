@@ -81,8 +81,17 @@ public class Solver {
             for (int n = i + 1; n < dualProgramFactors.size(); n++) {
                 Line lineB = dualProgramFactors.get(n);
                 Point point = findCrossPoint(lineA, lineB);
-                if (point != null){
-                    this.crossPoints.add(point);
+                if(point != null) {
+                    if (point.getX() == -0.0) {
+                        point.setX(0.0);
+                    }
+                    if (point.getY() == -0.0) {
+                        point.setY(0.0);
+                    }
+
+                    if (!this.crossPoints.contains(point)) {
+                        this.crossPoints.add(point);
+                    }
                 }
             }
         }
@@ -92,6 +101,7 @@ public class Solver {
         for (Line line : dualProgramFactors) {
             crossPoints.removeIf(point -> !isPointInRange(line.a, line.b, line.c, line.sign, point));
         }
+
     }
 
     public boolean isPointInRange(double aLine, double bLine, double cLine, String sign, Point point) {
@@ -129,7 +139,6 @@ public class Solver {
                 V.setX(P.getX());
                 V.setY(P.getY());
             }
-
         }
         return V;
     }
@@ -147,7 +156,6 @@ public class Solver {
         }
         return V;
     }
-
 
     public Double findGoalFunction() {
         List<Double> finalFirstEquationFactors = new ArrayList<>();
