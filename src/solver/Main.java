@@ -2,6 +2,7 @@ package solver;
 
 import java.util.List;
 import java.util.Scanner;
+import java.util.Set;
 
 public class Main {
 
@@ -47,7 +48,6 @@ public class Main {
             solver.findCrossPoints();
             List<Point> crossPoints = solver.getCrossPoints();
 
-
             // output duallines:
             for(Line line : solver.getDualProgramFactors()) {
                 System.out.println(line.a + "x + " + line.b + line.sign  + line.c);
@@ -75,6 +75,11 @@ public class Main {
             } else {
                 solver.maxValuePoint().printPoint();
             }
+
+            // output goal function
+
+            System.out.println("Goal Function Value: ");
+            System.out.println(solver.findGoalFunctionValue());
 
         } catch (NumberFormatException e) {
             System.out.println("Wrong factors inserted.");

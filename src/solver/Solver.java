@@ -12,6 +12,9 @@ public class Solver {
     private List<Double> secondEquationFactors;
 
     private int programSize;
+    private double GoalFunctionValue;
+
+    private Point V = new Point(0.0, 0.0);
 
     private String firstEquationSign;
     private String secondEquationSign;
@@ -36,6 +39,11 @@ public class Solver {
         this.max = max;
         this.programSize = firstEquationFactors.size();
 
+
+
+        dualProgramFactors.add(new Line(0,1, 0, ">="));
+        dualProgramFactors.add(new Line(1,0, 0, ">="));
+
         for (int i = 0; i < this.programSize - 1; i++) { // converting to dual program
             String sign = ">=";
             if (firstEquationSign == "<=") {
@@ -59,10 +67,14 @@ public class Solver {
         if (lineA.a == lineB.a) { // pararell functions
             return null;
         }
-        double x = -(lineA.b - lineB.b) / (lineA.a - lineB.a);
-        double y = lineA.a * x + lineA.b;
-
-        return new Point(x, y);
+        double det = (lineA.a * lineB.b) - (lineA.b * lineB.a);
+        if (det == 0)
+            return null;
+        else {
+            double x = ((lineB.b * lineA.c) - (lineA.b * lineB.c)) / det;
+            double y = ((lineA.a * lineB.c) - (lineB.a * lineA.c)) / det;
+            return new Point(x, y);
+        }
     }
 
     public void findCrossPoints() {
@@ -71,36 +83,48 @@ public class Solver {
             for (int n = i + 1; n < dualProgramFactors.size(); n++) {
                 Line lineB = dualProgramFactors.get(n);
                 Point point = findCrossPoint(lineA, lineB);
-                this.crossPoints.add(point);
+                if(point != null) {
+                    if (point.getX() == -0.0) {
+                        point.setX(0.0);
+                    }
+                    if (point.getY() == -0.0) {
+                        point.setY(0.0);
+                    }
+
+                    if (!this.crossPoints.contains(point)) {
+                        this.crossPoints.add(point);
+                    }
+                }
             }
         }
     }
 
     public void discardCrossPoints() { // discarding crossing points that don't belong to the area
         for (Line line : dualProgramFactors) {
-            crossPoints.removeIf(point -> !isPointInRange(line.a, line.b, line.sign, point));
+            crossPoints.removeIf(point -> !isPointInRange(line.a, line.b, line.c, line.sign, point));
         }
+
     }
 
-    public boolean isPointInRange(double aLine, double bLine, String sign, Point point) {
+    public boolean isPointInRange(double aLine, double bLine, double cLine, String sign, Point point) {
         if (sign.equals("<=")) {
-            if (point.getY() <= aLine * point.getX() + bLine) {
+            if (aLine * point.getX() + bLine * point.getY() <= cLine) {
                 return true;
             }
         } else if (sign.equals(">=")) {
-            if (point.getY() >= aLine * point.getX() + bLine) {
+            if (aLine * point.getX() + bLine * point.getY() >= cLine) {
                 return true;
             }
         } else if (sign.equals(">")) {
-            if (point.getY() > aLine * point.getX() + bLine) {
+            if (aLine * point.getX() + bLine * point.getY() > cLine) {
                 return true;
             }
         } else if (sign.equals("<")) {
-            if (point.getY() < aLine * point.getX() + bLine) {
+            if (aLine * point.getX() + bLine * point.getY() < cLine) {
                 return true;
             }
         } else if (sign.equals("==")) {
-            if (point.getY() == aLine * point.getX() + bLine) {
+            if (aLine * point.getX() + bLine * point.getY() == cLine) {
                 return true;
             }
         }
@@ -109,7 +133,6 @@ public class Solver {
 
     public Point minValuePoint() {
         Double minValue = Double.MAX_VALUE;
-        Point V = new Point(0.0, 0.0);
         for (Point P : crossPoints) {
             Double currentValue = firstEquationFactors.get(firstEquationFactors.size() - 1) * P.getX() + secondEquationFactors.get(secondEquationFactors.size() - 1) * P.getY();
             if (currentValue < minValue) {
@@ -117,14 +140,12 @@ public class Solver {
                 V.setX(P.getX());
                 V.setY(P.getY());
             }
-
         }
         return V;
     }
 
     public Point maxValuePoint() {
         Double maxValue = Double.MIN_VALUE;
-        Point V = new Point(0.0, 0.0);
         for (Point P : crossPoints) {
             Double currentValue = firstEquationFactors.get(firstEquationFactors.size() - 1) * P.getX() + secondEquationFactors.get(secondEquationFactors.size() - 1) * P.getY();
             if (currentValue > maxValue) {
@@ -137,16 +158,8 @@ public class Solver {
         return V;
     }
 
-    /* TODO: public double bestValue() {
-
-
-
-        double bestValue = 0;
-
-        for(double i :  this.functionFactors) {
-            bestValue = bestValue + ;
-        }
-
-        return bestValue;
-    }*/
+    public Double findGoalFunctionValue() {
+        GoalFunctionValue = V.getX() * firstEquationFactors.get(firstEquationFactors.size()-1) + V.getY() * secondEquationFactors.get(secondEquationFactors.size()-1);
+        return GoalFunctionValue;
+    }
 }
