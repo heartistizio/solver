@@ -52,6 +52,15 @@ public class Main {
             for (Point i : crossPoints) {
                 System.out.println(i.getX() + " " + i.getY());
             }
+
+            solver.discardCrossPoints();
+
+            // output crosspoints after discarding:
+            System.out.println("Constraints points list after discarding: ");
+            for (Point i : crossPoints) {
+                System.out.println(i.getX() + " " + i.getY());
+            }
+
             // output V point:
             System.out.println("Point V: ");
 
@@ -61,13 +70,9 @@ public class Main {
                 solver.maxValuePoint().printPoint();
             }
 
-            System.out.println(solver.findGoalFunctionxD());
-
         } catch (NumberFormatException e) {
             System.out.println("Wrong factors inserted.");
         }
-
-
     }
 }
 
