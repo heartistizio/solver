@@ -12,7 +12,7 @@ public class Factors {
 
         preConversionFactors = factorsString.split(" ");
 
-        for(String i : preConversionFactors) {
+        for (String i : preConversionFactors) {
             factors.add(Double.parseDouble(i));
         }
         return factors;
