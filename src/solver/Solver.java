@@ -7,7 +7,8 @@ public class Solver {
 
     private List<Double> firstEquationFactors;
 
-    public Solver() {} // for testing purposes
+    public Solver() {
+    } // for testing purposes
 
     private List<Double> secondEquationFactors;
 
@@ -40,9 +41,8 @@ public class Solver {
         this.programSize = firstEquationFactors.size();
 
 
-
-        dualProgramFactors.add(new Line(0,1, 0, ">="));
-        dualProgramFactors.add(new Line(1,0, 0, ">="));
+        dualProgramFactors.add(new Line(0, 1, 0, ">="));
+        dualProgramFactors.add(new Line(1, 0, 0, ">="));
 
         for (int i = 0; i < this.programSize - 1; i++) { // converting to dual program
             String sign = ">=";
@@ -64,7 +64,7 @@ public class Solver {
     }
 
     public Point findCrossPoint(Line lineA, Line lineB) {
-        if (lineA.a == lineB.a) { // pararell functions
+        if (lineA.a * lineB.b == lineB.a * lineA.b) { // pararell functions
             return null;
         }
         double det = (lineA.a * lineB.b) - (lineA.b * lineB.a);
@@ -83,13 +83,16 @@ public class Solver {
             for (int n = i + 1; n < dualProgramFactors.size(); n++) {
                 Line lineB = dualProgramFactors.get(n);
                 Point point = findCrossPoint(lineA, lineB);
-                if(point != null) {
+                if (point != null) {
                     if (point.getX() == -0.0) {
                         point.setX(0.0);
                     }
                     if (point.getY() == -0.0) {
                         point.setY(0.0);
                     }
+
+                    point.setX(Math.ceil(point.getX()));
+                    point.setY(Math.ceil(point.getY()));
 
                     if (!this.crossPoints.contains(point)) {
                         this.crossPoints.add(point);
@@ -159,7 +162,7 @@ public class Solver {
     }
 
     public Double findGoalFunctionValue() {
-        GoalFunctionValue = V.getX() * firstEquationFactors.get(firstEquationFactors.size()-1) + V.getY() * secondEquationFactors.get(secondEquationFactors.size()-1);
+        GoalFunctionValue = V.getX() * firstEquationFactors.get(firstEquationFactors.size() - 1) + V.getY() * secondEquationFactors.get(secondEquationFactors.size() - 1);
         return GoalFunctionValue;
     }
 }

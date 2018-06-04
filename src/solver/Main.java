@@ -8,6 +8,8 @@ public class Main {
 
     public static void main(String[] args) {
 
+
+
         Scanner scanner = new Scanner(System.in);
 
         List<Double> firstEquationFactors;
@@ -30,7 +32,6 @@ public class Main {
         scanner.close();
 
         try {
-
             boolean max;
 
             if (minMax.equals("max")) {
@@ -47,6 +48,10 @@ public class Main {
             Solver solver = new Solver(firstEquationFactors, firstEquationSign, secondEquationFactors, secondEquationSign, functionFactors, max);
             solver.findCrossPoints();
             List<Point> crossPoints = solver.getCrossPoints();
+
+            System.out.println("Tutaj: ");
+            System.out.println("ma byc 1 gnoju: " + solver.findCrossPoint(new Line(0.4,0.2,14, ">="), new Line(0.4, 0.0, 8.0, ">=")));
+
 
             // output duallines:
             for(Line line : solver.getDualProgramFactors()) {
