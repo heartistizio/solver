@@ -12,6 +12,9 @@ public class Solver {
     private List<Double> secondEquationFactors;
 
     private int programSize;
+    private double GoalFunction;
+
+    private Point V = new Point(0.0, 0.0);
 
     private String firstEquationSign;
     private String secondEquationSign;
@@ -59,10 +62,14 @@ public class Solver {
         if (lineA.a == lineB.a) { // pararell functions
             return null;
         }
-        double x = -(lineA.b - lineB.b) / (lineA.a - lineB.a);
-        double y = lineA.a * x + lineA.b;
-
-        return new Point(x, y);
+        double det = (lineA.a * lineB.b) - (lineA.b * lineB.a);
+        if (det == 0)
+            return null;
+        else {
+            double x = ((lineB.b * lineA.c) - (lineA.b * lineB.c)) / det;
+            double y = ((lineA.a * lineB.c) - (lineB.a * lineA.c)) / det;
+            return new Point(x, y);
+        }
     }
 
     public void findCrossPoints() {
@@ -71,36 +78,38 @@ public class Solver {
             for (int n = i + 1; n < dualProgramFactors.size(); n++) {
                 Line lineB = dualProgramFactors.get(n);
                 Point point = findCrossPoint(lineA, lineB);
-                this.crossPoints.add(point);
+                if (point != null){
+                    this.crossPoints.add(point);
+                }
             }
         }
     }
 
     public void discardCrossPoints() { // discarding crossing points that don't belong to the area
         for (Line line : dualProgramFactors) {
-            crossPoints.removeIf(point -> !isPointInRange(line.a, line.b, line.sign, point));
+            crossPoints.removeIf(point -> !isPointInRange(line.a, line.b, line.c, line.sign, point));
         }
     }
 
-    public boolean isPointInRange(double aLine, double bLine, String sign, Point point) {
+    public boolean isPointInRange(double aLine, double bLine, double cLine, String sign, Point point) {
         if (sign.equals("<=")) {
-            if (point.getY() <= aLine * point.getX() + bLine) {
+            if (aLine * point.getX() + bLine * point.getY() <= cLine) {
                 return true;
             }
         } else if (sign.equals(">=")) {
-            if (point.getY() >= aLine * point.getX() + bLine) {
+            if (aLine * point.getX() + bLine * point.getY() >= cLine) {
                 return true;
             }
         } else if (sign.equals(">")) {
-            if (point.getY() > aLine * point.getX() + bLine) {
+            if (aLine * point.getX() + bLine * point.getY() > cLine) {
                 return true;
             }
         } else if (sign.equals("<")) {
-            if (point.getY() < aLine * point.getX() + bLine) {
+            if (aLine * point.getX() + bLine * point.getY() < cLine) {
                 return true;
             }
         } else if (sign.equals("==")) {
-            if (point.getY() == aLine * point.getX() + bLine) {
+            if (aLine * point.getX() + bLine * point.getY() == cLine) {
                 return true;
             }
         }
@@ -124,7 +133,6 @@ public class Solver {
 
     public Point maxValuePoint() {
         Double maxValue = Double.MIN_VALUE;
-        Point V = new Point(0.0, 0.0);
         for (Point P : crossPoints) {
             Double currentValue = firstEquationFactors.get(firstEquationFactors.size() - 1) * P.getX() + secondEquationFactors.get(secondEquationFactors.size() - 1) * P.getY();
             if (currentValue > maxValue) {
@@ -137,6 +145,24 @@ public class Solver {
         return V;
     }
 
+
+    public Double findGoalFunctionxD() {
+        List<Double> finalFirstEquationFactors = new ArrayList<>();
+        List<Double> finalSecondEquationFactors = new ArrayList<>();
+        List<Double> finalFunctionFactors = new ArrayList<>();
+        for(Integer i = 0; i < functionFactors.size(); i++){
+            System.out.println(functionFactors.get(i));
+            System.out.println((V.getX() * firstEquationFactors.get(i) + V.getY() * secondEquationFactors.get(i) ));
+            if(((V.getX() * firstEquationFactors.get(i) + V.getY() * secondEquationFactors.get(i) )== functionFactors.get(i)))
+                finalFirstEquationFactors.add(firstEquationFactors.get(i));
+            finalSecondEquationFactors.add(secondEquationFactors.get(i));
+            finalFunctionFactors.add(functionFactors.get(i));
+        }
+        System.out.println(finalFirstEquationFactors);
+        System.out.println(finalSecondEquationFactors);
+        System.out.println(finalFunctionFactors);
+        return GoalFunction;
+    }
     /* TODO: public double bestValue() {
 
 
