@@ -47,6 +47,12 @@ public class Main {
             solver.findCrossPoints();
             List<Point> crossPoints = solver.getCrossPoints();
 
+
+            // output duallines:
+            for(Line line : solver.getDualProgramFactors()) {
+                System.out.println(line.a + "x + " + line.b + line.sign  + line.c);
+            }
+
             // output crosspoints:
             System.out.println("Constraints points list: ");
             for (Point i : crossPoints) {
