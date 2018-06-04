@@ -2,13 +2,11 @@ package solver;
 
 import java.util.List;
 import java.util.Scanner;
-import java.util.Set;
+
 
 public class Main {
 
     public static void main(String[] args) {
-
-
 
         Scanner scanner = new Scanner(System.in);
 
@@ -49,21 +47,17 @@ public class Main {
             solver.findCrossPoints();
             List<Point> crossPoints = solver.getCrossPoints();
 
-            System.out.println("Tutaj: ");
-            System.out.println("ma byc 1 gnoju: " + solver.findCrossPoint(new Line(0.4,0.2,14, ">="), new Line(0.4, 0.0, 8.0, ">=")));
-
-
             // output duallines:
-            for(Line line : solver.getDualProgramFactors()) {
-                System.out.println(line.a + "x + " + line.b + line.sign  + line.c);
+            for (Line line : solver.dualProgramFactors) {
+                System.out.println(line.a + "x + " + line.b + "y " + line.sign + line.c);
             }
 
-            // output crosspoints:
+            /*// output crosspoints:
             System.out.println("Constraints points list: ");
             for (Point i : crossPoints) {
                 System.out.println(i.getX() + " " + i.getY());
             }
-
+*/
             solver.discardCrossPoints();
 
             // output crosspoints after discarding:
@@ -73,7 +67,7 @@ public class Main {
             }
 
             // output V point:
-            System.out.println("Point V: ");
+            System.out.println("Point V (PD): ");
 
             if (solver.isMax()) {
                 solver.minValuePoint().printPoint();
@@ -81,10 +75,20 @@ public class Main {
                 solver.maxValuePoint().printPoint();
             }
 
-            // output goal function
+            solver.checkIfWeTakePDLine();
+            solver.evaluateV();
 
-            System.out.println("Goal Function Value: ");
-            System.out.println(solver.findGoalFunctionValue());
+            System.out.println("Point V (PP): ");
+            System.out.print("(");
+            for (int i = 0; i < solver.V.length; i++) {
+                System.out.print(solver.V[i] + ", ");
+            }
+            System.out.print(")");
+            System.out.println();
+
+            solver.evaluateFV();
+
+            System.out.println("WYNIK FINALNY F(V): " + solver.FV);
 
         } catch (NumberFormatException e) {
             System.out.println("Wrong factors inserted.");

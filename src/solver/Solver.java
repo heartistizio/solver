@@ -1,33 +1,31 @@
 package solver;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class Solver {
 
     private List<Double> firstEquationFactors;
-
-    public Solver() {
-    } // for testing purposes
-
     private List<Double> secondEquationFactors;
 
-    private int programSize;
-    private double GoalFunctionValue;
+    public int programSize;
 
-    private Point V = new Point(0.0, 0.0);
+    private Point PDSolution = new Point(0.0, 0.0);
 
     private String firstEquationSign;
     private String secondEquationSign;
 
+    public double[] V; // punkt PP
+    public double FV = 0; // finalna wartosc
+
+
     private List<Double> functionFactors;
     private List<Point> crossPoints = new ArrayList<>();
 
-    public List<Line> getDualProgramFactors() {
-        return dualProgramFactors;
-    }
-
-    private List<Line> dualProgramFactors = new ArrayList<>();
+    public List<Line> dualProgramFactors = new ArrayList<>();
+    public boolean[] whichPDEquation;
 
     private boolean max;
 
@@ -38,17 +36,21 @@ public class Solver {
         this.secondEquationSign = secondEquationSign;
         this.functionFactors = functionFactors;
         this.max = max;
-        this.programSize = firstEquationFactors.size();
+        this.programSize = firstEquationFactors.size() - 1;
+        this.whichPDEquation = new boolean[programSize];
+        Arrays.fill(this.whichPDEquation, false);
 
+        this.V = new double[programSize];
+        Arrays.fill(this.V, 0.0);
 
         dualProgramFactors.add(new Line(0, 1, 0, ">="));
         dualProgramFactors.add(new Line(1, 0, 0, ">="));
 
-        for (int i = 0; i < this.programSize - 1; i++) { // converting to dual program
+        for (int i = 0; i < this.programSize; i++) { // converting to dual program
             String sign = ">=";
-            if (firstEquationSign == "<=") {
+            if (firstEquationSign.equals("<=")) {
                 sign = ">=";
-            } else if (firstEquationSign == ">=") {
+            } else if (firstEquationSign.equals(">=")) {
                 sign = "<=";
             }
             dualProgramFactors.add(new Line(firstEquationFactors.get(i), secondEquationFactors.get(i), functionFactors.get(i), sign));
@@ -140,11 +142,11 @@ public class Solver {
             Double currentValue = firstEquationFactors.get(firstEquationFactors.size() - 1) * P.getX() + secondEquationFactors.get(secondEquationFactors.size() - 1) * P.getY();
             if (currentValue < minValue) {
                 minValue = currentValue;
-                V.setX(P.getX());
-                V.setY(P.getY());
+                PDSolution.setX(P.getX());
+                PDSolution.setY(P.getY());
             }
         }
-        return V;
+        return PDSolution;
     }
 
     public Point maxValuePoint() {
@@ -153,16 +155,57 @@ public class Solver {
             Double currentValue = firstEquationFactors.get(firstEquationFactors.size() - 1) * P.getX() + secondEquationFactors.get(secondEquationFactors.size() - 1) * P.getY();
             if (currentValue > maxValue) {
                 maxValue = currentValue;
-                V.setX(P.getX());
-                V.setY(P.getY());
+                PDSolution.setX(P.getX());
+                PDSolution.setY(P.getY());
             }
 
         }
-        return V;
+        return PDSolution;
     }
 
-    public Double findGoalFunctionValue() {
-        GoalFunctionValue = V.getX() * firstEquationFactors.get(firstEquationFactors.size() - 1) + V.getY() * secondEquationFactors.get(secondEquationFactors.size() - 1);
-        return GoalFunctionValue;
+    public boolean pointBelongsToLine(Point point, Line line) {
+        if (line.a * point.getX() + line.b * point.getY() - line.c == 0) {
+            return true;
+        }
+        return false;
     }
+
+    public void checkIfWeTakePDLine() {
+        for (int i = 2; i < programSize + 2; i++) { // 2 because I added axis
+            if (pointBelongsToLine(this.PDSolution, dualProgramFactors.get(i))) {
+                whichPDEquation[i - 2] = true;
+            }
+        }
+    }
+
+    public void evaluateV() {
+        List<Line> lines = new ArrayList<>();
+        for (int i = 0; i < programSize; i++) {
+
+            if (whichPDEquation[i]) {
+                lines.add(dualProgramFactors.get(i + 2));
+            }
+        }
+        Line PPLineA = new Line(lines.get(0).a, lines.get(1).a, firstEquationFactors.get(firstEquationFactors.size() - 1), "==");
+        Line PPLineB = new Line(lines.get(0).b, lines.get(1).b, secondEquationFactors.get(secondEquationFactors.size() - 1), "==");
+
+        Point point = findCrossPoint(PPLineA, PPLineB);
+
+        boolean flag = false;
+        for (int i = 0; i < programSize; i++) {
+            if (whichPDEquation[i] && !flag) {
+                this.V[i] = point.getX();
+                flag = true;
+            } else if (whichPDEquation[i]) {
+                this.V[i] = point.getY();
+            }
+        }
+    }
+
+    public void evaluateFV() {
+        for (int i = 0; i < V.length; i++) {
+            FV = FV + functionFactors.get(i) * V[i];
+        }
+    }
+
 }

@@ -3,7 +3,8 @@ package solver;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Factors {
+
+class Factors {
 
     public static List<Double> parse(String factorsString) throws NumberFormatException {
 
