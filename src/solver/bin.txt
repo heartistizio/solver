@@ -1,0 +1,24 @@
+public boolean isPointInRange(double aLine, double bLine, String sign, Point point) {
+        if (sign.equals("<=")) {
+            if (point.getY() <= aLine * point.getX() + bLine) {
+                return true;
+            }
+        } else if (sign.equals(">=")) {
+            if (point.getY() >= aLine * point.getX() + bLine) {
+                return true;
+            }
+        } else if (sign.equals(">")) {
+            if (point.getY() > aLine * point.getX() + bLine) {
+                return true;
+            }
+        } else if (sign.equals("<")) {
+            if (point.getY() < aLine * point.getX() + bLine) {
+                return true;
+            }
+        } else if (sign.equals("==")) {
+            if (point.getY() == aLine * point.getX() + bLine) {
+                return true;
+            }
+        }
+        return false;
+    }
