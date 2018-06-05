@@ -17,8 +17,8 @@ public class Solver {
     private String firstEquationSign;
     private String secondEquationSign;
 
-    public double[] V; // punkt PP
-    public double FV = 0; // finalna wartosc
+    public double[] V; // PP
+    public double FV = 0; // F(V)
 
 
     private List<Double> functionFactors;
@@ -93,8 +93,8 @@ public class Solver {
                         point.setY(0.0);
                     }
 
-                    point.setX(Math.ceil(point.getX()));
-                    point.setY(Math.ceil(point.getY()));
+                    point.setX(point.getX());
+                    point.setY(point.getY());
 
                     if (!this.crossPoints.contains(point)) {
                         this.crossPoints.add(point);
@@ -207,5 +207,4 @@ public class Solver {
             FV = FV + functionFactors.get(i) * V[i];
         }
     }
-
 }
